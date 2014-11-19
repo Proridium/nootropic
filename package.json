@@ -6,6 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "hapi": "^7.5.2",
+    "joi": "^4.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mpsbroadband/nootropic.git"
+  },
   "author": "",
   "license": "ISC"
 }

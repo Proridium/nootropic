@@ -1,15 +1,9 @@
 var Hapi = require('hapi');
 var routes = require('./routes');
 
-var config = { };
-var server = new Hapi.Server('0.0.0.0', 8080, config);
-server.pack.require({ lout: { endpoint: '/docs' } }, function (err) {
+var server = new Hapi.Server('localhost', 8000);
 
-   if (err) {
-      console.log('Failed loading plugins');
-   }
-});
-
-server.addRoutes(routes);
+// Add the routes
+server.route(routes);
 
 server.start();

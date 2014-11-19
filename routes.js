@@ -1,28 +1,53 @@
-var Types = require('hapi').types;
+var Joi = require('joi');
 
 module.exports = [
-   { method: 'GET', path: '/products', config: { handler: getProducts, validate: { query: { name: Types.String() } } } },
-   { method: 'GET', path: '/products/{id}', config: { handler: getProduct } },
-   { method: 'POST', path: '/products', config: { handler: addProduct, payload: 'parse', validate: { payload: { name: Types.String().required().min(3) } } } }
+   { method: 'GET', path: '/hello', handler: getHello },
+   { method: 'GET', path: '/products', handler: getProducts },
+   { method: 'GET', path: '/products/{id}', handler: getProduct,
+      config: {
+         validate: {
+            params: {
+               id: Joi.number()
+                .required()
+            }
+         }
+      }
+   },
+   { method: 'POST', path: '/products', handler: addProduct,
+      config: {
+         validate: {
+            payload: { limit: Joi.number().integer() }
+         }
+      }
+   }
 ];
 
-var products = [{
-   id: 1,
-   name: 'Guitar'
-},
+var products = [
+   {
+      id: 1,
+      name: 'Guitar'
+   },
    {
       id: 2,
       name: 'Banjo'
+   },
+   {
+      id: 3,
+      name: 'Trumpet'
    }
 ];
 
-function getProducts(request) {
+function getHello(request, reply) {
+   reply('hello world');
+}
+
+function getProducts(request, reply) {
 
    if (request.query.name) {
-      request.reply(findProducts(request.query.name));
+      reply(findProducts(request.query.name));
    }
    else {
-      request.reply(products);
+      reply(products);
    }
 }
 
@@ -33,16 +58,16 @@ function findProducts(name) {
    });
 }
 
-function getProduct(request) {
+function getProduct(request, reply) {
 
    var product = products.filter(function(p) {
-      return p.id === parseInt(request.params.id);
+      return p.id === request.params.id;
    }).pop();
 
-   request.reply(product);
+   reply(product);
 }
 
-function addProduct(request) {
+function addProduct(request, reply) {
 
    var product = {
       id: products[products.length - 1].id + 1,
@@ -51,5 +76,5 @@ function addProduct(request) {
 
    products.push(product);
 
-   request.reply(product).code(201).header('Location', '/products/' + product.id);
+   reply(product).code(201).header('Location', '/products/' + product.id);
 }
