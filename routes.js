@@ -33,7 +33,7 @@ var products = [
    },
    {
       id: 3,
-      name: 'Trumpet'
+      name: 'Ukelele'
    }
 ];
 
